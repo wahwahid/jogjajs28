@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta http-equiv="refresh" content="3">
+
+  <title>JogjaJS28</title>
+
+  <link rel="stylesheet" href="https://taniarascia.github.io/primitive/css/main.css">
+  <link rel="icon" href="images/favicon.png">
+</head>
+
+<body>
+  <div class="medium-container">
+    <div class="flex-row">
+      <div class="flex-large">
+        <h1>Realtime Counter with meta</h1>
+        <p>This site has visited counter that automatically updated every 3 seconds.</p>
+        <hr>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-small">
+        <h1>{{ counter }}</h1>
+        <p>Page Visit</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

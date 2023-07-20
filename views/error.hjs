@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>JogjaJS28</title>
+
+  <link rel="stylesheet" href="https://taniarascia.github.io/primitive/css/main.css">
+  <link rel="icon" href="images/favicon.png">
+</head>
+
+
+<body>
+  <div class="medium-container">
+    <div class="flex-row">
+      <div class="flex-large">
+        <h1>{{ message }}</h1>
+        <h2>{{ error.status }}</h2>
+        <pre>{{ error.stack }}</pre>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

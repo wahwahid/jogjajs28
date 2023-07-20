@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>JogjaJS28</title>
+
+  <link rel="stylesheet" href="https://taniarascia.github.io/primitive/css/main.css">
+  <link rel="icon" href="images/favicon.png">
+</head>
+
+<body>
+  <div class="medium-container">
+    <div class="flex-row">
+      <div class="flex-large">
+        <h1>Realtime Counter with long pooling</h1>
+        <p>This page has visited counter that updated realtime using long pooling.</p>
+        <hr>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-small">
+        <h1 id="counter">Loading...</h1>
+        <p>Page Visit</p>
+      </div>
+      <div class="flex-small">
+        <h1 id="pool">Loading...</h1>
+        <p>Pool Calls</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var pool = 0
+    var poolElem = document.getElementById("pool")
+
+    async function longPooling(init = false) {
+      pool++
+      poolElem.innerText = pool
+
+      let res = await fetch(`http://localhost:3000/with-longpool/update?init=${init}`)
+      if (res.status == 502) {
+        await longPooling()
+      } else if (res.status != 200) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        await longPooling()
+      } else {
+        const data = await res.json()
+        document.getElementById("counter").innerText = data.counter
+
+        await longPooling()
+      }
+    }
+    longPooling(true)
+  </script>
+</body>
+
+</html>

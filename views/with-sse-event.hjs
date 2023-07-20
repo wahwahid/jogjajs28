@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>JogjaJS28</title>
+
+  <link rel="stylesheet" href="https://taniarascia.github.io/primitive/css/main.css">
+  <link rel="icon" href="images/favicon.png">
+</head>
+
+<body>
+  <div class="medium-container">
+    <div class="flex-row">
+      <div class="flex-large">
+        <h1>Realtime Counter with SSE Event</h1>
+        <p>
+          This page has visited counter that updated realtime using server sent events.<br>
+          This page also know who and what happened.
+        </p>
+        <hr>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-small">
+        <h1><span id="counter">Loading...</span></h1>
+        <p>Page Visit</p>
+      </div>
+      <div class="flex-small">
+        <h1><span id="online">Loading...</span></h1>
+        <p>SSE Connection</p>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-large">
+        <img src="https://monophy.com/media/Y0slbp1Hr4C8lUA5UG/monophy.gif" width="12">
+        <div id="log"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    intro()
+    function intro() {
+      const visitor = prompt('Please enter your name to enter!')
+      if (visitor == '') {
+        intro()
+      } else {
+        connectSSE(visitor)
+      }
+    }
+    function connectSSE(name) {
+      const events = new EventSource('http://localhost:3000/with-sse-event/connect?name=' + encodeURI(name));
+
+      events.addEventListener('visit', (event) => {
+        const parsedData = JSON.parse(event.data);
+        updateVisitCount(parsedData.counter)
+      })
+
+      events.addEventListener('hey', (event) => {
+        const parsedData = JSON.parse(event.data);
+        updateVisitCount(parsedData.counter)
+        updateOnlineCount(parsedData.online)
+
+        addLog(`Halo semua, ${parsedData.name} baru saja datang!`)
+      })
+
+      events.addEventListener('bye', (event) => {
+        const parsedData = JSON.parse(event.data);
+        updateOnlineCount(parsedData.online)
+
+        addLog(`Maaf semua, ${parsedData.name} baru saja pergi.`)
+      })
+    }
+    function updateVisitCount(val) {
+      const counterElem = document.getElementById('counter')
+      counterElem.innerText = val
+    }
+    function updateOnlineCount(val) {
+      const onlineElem = document.getElementById('online')
+      onlineElem.innerText = val
+    }
+    function addLog(text) {
+      const logElem = document.getElementById('log')
+      const log = document.createElement('pre')
+      log.style.padding = '0'
+      log.style.margin = '0 0 .4rem 0'
+      log.innerText = text
+      logElem.prepend(log)
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>JogjaJS28</title>
+
+  <link rel="stylesheet" href="https://taniarascia.github.io/primitive/css/main.css">
+  <link rel="icon" href="images/favicon.png">
+</head>
+
+<body>
+  <div class="medium-container">
+    <div class="flex-row">
+      <div class="flex-large">
+        <h1>Realtime Counter with SSE</h1>
+        <p>This page has visited counter that updated realtime using server sent events.</p>
+        <hr>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-small">
+        <h1><span id="counter">Loading...</span></h1>
+        <p>Page Visit</p>
+      </div>
+      <div class="flex-small">
+        <h1><span id="online">Loading...</span></h1>
+        <p>SSE Connection</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const events = new EventSource('http://localhost:3000/with-sse/connect');
+
+    events.onmessage = (event) => {
+      const parsedData = JSON.parse(event.data);
+      document.getElementById('counter').innerText = parsedData.counter
+      document.getElementById('online').innerText = parsedData.online
+    };
+  </script>
+</body>
+
+</html>
