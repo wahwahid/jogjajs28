@@ -33,7 +33,7 @@
     </div>
   </div>
   <script>
-    const events = new EventSource('http://localhost:3000/with-sse/connect');
+    const events = new EventSource('/with-sse/connect');
 
     events.onmessage = (event) => {
       const parsedData = JSON.parse(event.data);

@@ -40,7 +40,7 @@
       pool++
       poolElem.innerText = pool
 
-      let res = await fetch(`http://localhost:3000/with-longpool/update?init=${init}`)
+      let res = await fetch(`/with-longpool/update?init=${init}`)
       if (res.status == 502) {
         await longPooling()
       } else if (res.status != 200) {

@@ -56,7 +56,7 @@
     }, 1000)
 
     async function pooling() {
-      let res = await fetch('http://localhost:3000/with-pool/update')
+      let res = await fetch('/with-pool/update')
       if (res.status == 200) {
         const data = await res.json()
         document.getElementById("counter").innerText = data.counter

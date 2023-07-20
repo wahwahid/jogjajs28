@@ -52,7 +52,7 @@
       }
     }
     function connectSSE(name) {
-      const events = new EventSource('http://localhost:3000/with-sse-event/connect?name=' + encodeURI(name));
+      const events = new EventSource('/with-sse-event/connect?name=' + encodeURI(name));
 
       events.addEventListener('visit', (event) => {
         const parsedData = JSON.parse(event.data);
