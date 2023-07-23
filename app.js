@@ -10,6 +10,9 @@ var indexRouter = require('./routes/index');
 var app = express();
 
 // view engine setup
+hbs.registerHelper('env', function (key) {
+  return new hbs.SafeString(process.env[key])
+})
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.engine('html', hbs.express4({
