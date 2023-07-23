@@ -8,31 +8,31 @@ const longPool = new Event()
 
 // Index
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'JogjaJS28' });
+  res.render('index', { title: 'JogjaJS #28' });
 });
 
-// Static
+// Realtime in static
 router.get('/static', function(req, res, next) {
   memstorage.Counter++
-  res.render('static', { counter: memstorage.Counter });
+  res.render('static', { title: 'Realtime in static - JogjaJS #28', counter: memstorage.Counter });
 });
 
-// Static with meta
+// Realtime in static with meta
 router.get('/static-meta', function(req, res, next) {
   memstorage.CounterMeta++
-  res.render('static-meta', { counter: memstorage.CounterMeta });
+  res.render('static-meta', { title: 'Realtime in static with meta - JogjaJS #28', counter: memstorage.CounterMeta });
 });
 
-// Static with JS
+// Realtime in static with JS
 router.get('/static-js', function(req, res, next) {
   memstorage.CounterJS++
-  res.render('static-js', { counter: memstorage.CounterJS });
+  res.render('static-js', { title: 'Realtime in static with JS - JogjaJS #28', counter: memstorage.CounterJS });
 });
 
 // Realtime with pool
 router.get('/with-pool', function(req, res, next) {
   memstorage.CounterPoll++
-  res.render('with-pool');
+  res.render('with-pool', { title: 'Realtime with pooling - JogjaJS #28' });
 });
 
 router.get('/with-pool/update', function(req, res, next) {
@@ -45,7 +45,7 @@ router.get('/with-pool/update', function(req, res, next) {
 router.get('/with-longpool', function(req, res, next) {
   memstorage.CounterLongPoll++
   longPool.emit('visit', memstorage.CounterLongPoll)
-  res.render('with-longpool');
+  res.render('with-longpool', { title: 'Realtime with long pooling - JogjaJS #28' });
 });
 
 router.get('/with-longpool/update', function(req, res, next) {
@@ -59,9 +59,8 @@ router.get('/with-longpool/update', function(req, res, next) {
         res.json({
           counter,
         })
+      } finally {
         longPool.removeListener('visit', handler)
-      } catch (error) {
-        console.log(error)
       }
     }
     const listener = longPool.addListener('visit', handler)
@@ -73,7 +72,7 @@ router.get('/with-sse', function(req, res, next) {
   memstorage.CounterSSE++
   const data = { counter: memstorage.CounterSSE, online: sse.GetClientCount(), tag: 'visit' }
   sse.Broadcast(data)
-  res.render('with-sse');
+  res.render('with-sse', { title: 'Realtime with SSE - JogjaJS #28' });
 });
 
 router.get('/with-sse/connect', function(req, res, next) {
@@ -98,7 +97,7 @@ router.get('/with-sse-event', function(req, res, next) {
   memstorage.CounterSSEEvent++
   const data = { counter: memstorage.CounterSSEEvent }
   sse.BroadcastEvent('visit', data)
-  res.render('with-sse-event');
+  res.render('with-sse-event', { title: 'Realtime with SSE Event - JogjaJS #28' });
 });
 
 router.get('/with-sse-event/connect', function(req, res, next) {

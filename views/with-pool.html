@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{{ title }}</title>
+
+  <link rel="stylesheet" href="https://taniarascia.github.io/primitive/css/main.css">
+  <link rel="icon" href="images/favicon.png">
+  {{> gtag }}
+</head>
+
+<body>
+  <div class="medium-container">
+    <div class="flex-row">
+      <div class="flex-large">
+        <h1>Realtime Counter with pooling</h1>
+        <p>This site has visited counter that updating data in <span id="ticker"></span> seconds...</p>
+        <hr>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-small">
+        <h1 id="counter">Loading...</h1>
+        <p>Page Visit</p>
+      </div>
+      <div class="flex-small">
+        <h1 id="pool">Loading...</h1>
+        <p>Pool Calls</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var interval = 5
+    var ticker = 0
+    var tickerElem = document.getElementById("ticker")
+    var pool = 0
+    var poolElem = document.getElementById("pool")
+
+    tickerElem.innerText = ticker
+    setInterval(async function() {
+      if (ticker == 0) {
+        pool++
+        poolElem.innerText = pool
+        try {
+          await pooling()
+        } finally {
+          ticker = interval
+        }
+      } else {
+        ticker--
+      }
+      tickerElem.innerText = ticker
+    }, 1000)
+
+    async function pooling() {
+      let res = await fetch('/with-pool/update')
+      if (res.status == 200) {
+        const data = await res.json()
+        document.getElementById("counter").innerText = data.counter
+      }
+    }
+  </script>
+</body>
+
+</html>
