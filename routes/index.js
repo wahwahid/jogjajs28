@@ -5,6 +5,8 @@ const sse = require('../services/sse')
 const { query } = require('express')
 const router = express.Router()
 const longPool = new Event()
+const sse1 = new sse.Manager()
+const sse2 = new sse.Manager()
 
 // Index
 router.get('/', function(req, res, next) {
@@ -70,25 +72,25 @@ router.get('/with-longpool/update', function(req, res, next) {
 // Realtime with SSE
 router.get('/with-sse', function(req, res, next) {
   memstorage.CounterSSE++
-  const data = { counter: memstorage.CounterSSE, online: sse.GetClientCount(), tag: 'visit' }
-  sse.Broadcast(data)
+  const data = { counter: memstorage.CounterSSE, online: sse1.getClientCount(), tag: 'visit' }
+  sse1.broadcast(data)
   res.render('with-sse', { title: 'Realtime with SSE - JogjaJS #28' });
 });
 
 router.get('/with-sse/connect', function(req, res, next) {
   const clientId = Date.now();
   console.log(`SSE ${clientId} Connection open`);
-  sse.AddClient(clientId, res)
+  sse1.addClient(clientId, res)
 
-  const data = { counter: memstorage.CounterSSE, online: sse.GetClientCount(), tag: 'connect' }
-  sse.Broadcast(data)
+  const data = { counter: memstorage.CounterSSE, online: sse1.getClientCount(), tag: 'connect' }
+  sse1.broadcast(data)
 
   req.on('close', () => {
     console.log(`SSE ${clientId} Connection closed`);
-    sse.RemoveClient(clientId)
+    sse1.removeClient(clientId)
 
-    const data = { counter: memstorage.CounterSSE, online: sse.GetClientCount(), tag: 'disconnect' }
-    sse.Broadcast(data)
+    const data = { counter: memstorage.CounterSSE, online: sse1.getClientCount(), tag: 'disconnect' }
+    sse1.broadcast(data)
   });
 });
 
@@ -96,7 +98,7 @@ router.get('/with-sse/connect', function(req, res, next) {
 router.get('/with-sse-event', function(req, res, next) {
   memstorage.CounterSSEEvent++
   const data = { counter: memstorage.CounterSSEEvent }
-  sse.BroadcastEvent('visit', data)
+  sse2.broadcastEvent('visit', data)
   res.render('with-sse-event', { title: 'Realtime with SSE Event - JogjaJS #28' });
 });
 
@@ -108,23 +110,23 @@ router.get('/with-sse-event/connect', function(req, res, next) {
 
   const clientId = Date.now();
   console.log(`SSE ${clientId} Connection open`);
-  sse.AddClient(clientId, res, {
+  sse2.addClient(clientId, res, {
     name
   })
 
-  const data = { counter: memstorage.CounterSSEEvent, online: sse.GetClientCount(), name }
-  sse.BroadcastEvent('hey', data)
+  const data = { counter: memstorage.CounterSSEEvent, online: sse2.getClientCount(), name }
+  sse2.broadcastEvent('hey', data)
 
   const interval = setInterval(() => {
-    sse.BroadcastEvent('ping', {})
+    sse2.broadcastEvent('ping', {})
   }, 5000);
 
   req.on('close', () => {
     console.log(`SSE ${clientId} Connection closed`);
-    sse.RemoveClient(clientId)
+    sse2.removeClient(clientId)
 
-    const data = { online: sse.GetClientCount(), name}
-    sse.BroadcastEvent('bye', data)
+    const data = { online: sse2.getClientCount(), name}
+    sse2.broadcastEvent('bye', data)
 
     clearInterval(interval)
   });
