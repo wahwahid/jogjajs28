@@ -46,7 +46,7 @@
     intro()
     function intro() {
       const visitor = prompt('Please enter your name to enter!')
-      if (visitor == '') {
+      if (visitor === '' || visitor === null) {
         intro()
       } else {
         connectSSE(visitor)
